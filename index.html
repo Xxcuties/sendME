@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Send me a message~ 🌸</title>
+  <link rel="icon" href="logo.gif" type="image/gif">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: #fff6fa;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem;
+    }
+
+    .deco-circle { position: fixed; border-radius: 50%; pointer-events: none; z-index: 0; }
+    .deco-1 { width: 220px; height: 220px; background: #ffd6e7; opacity: 0.4; top: -70px; right: -50px; }
+    .deco-2 { width: 130px; height: 130px; background: #ffb6c1; opacity: 0.25; bottom: 60px; left: -40px; }
+
+    .card {
+      background: #fff;
+      border: 2px solid #f7c6d8;
+      border-radius: 24px;
+      padding: 2rem 1.8rem;
+      width: 100%;
+      max-width: 420px;
+      position: relative;
+      z-index: 1;
+      animation: fadeIn 0.5s ease;
+    }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    .logo-wrap {
+      display: flex; flex-direction: column; align-items: center; margin-bottom: 1.4rem;
+    }
+    .logo-img {
+      width: 70px; height: 70px; border-radius: 50%;
+      border: 2.5px solid #ffb6c1; overflow: hidden;
+      background: #ffd6e7; margin-bottom: 8px;
+    }
+    .logo-img img { width: 100%; height: 100%; object-fit: cover; }
+    .logo-name {
+      font-family: 'Playfair Display', serif;
+      font-style: italic; font-size: 1.3rem;
+      color: #c45a8a; font-weight: 700;
+    }
+    .logo-sub { font-size: 0.78rem; color: #d4a0b5; margin-top: 2px; }
+
+    .field { margin-bottom: 1.1rem; }
+    label {
+      display: block; font-size: 0.72rem; font-weight: 800;
+      color: #c45a8a; text-transform: uppercase;
+      letter-spacing: 0.5px; margin-bottom: 6px;
+    }
+    textarea, input[type="text"] {
+      width: 100%; background: #fff6fa;
+      border: 1.5px solid #f0b8ce; border-radius: 12px;
+      padding: 10px 14px; font-family: 'Nunito', sans-serif;
+      font-size: 0.92rem; color: #5c3d4a; outline: none;
+      transition: border-color 0.2s;
+    }
+    textarea:focus, input[type="text"]:focus {
+      border-color: #c45a8a; background: #fff;
+    }
+    textarea { height: 120px; resize: vertical; }
+
+    .char-count {
+      font-size: 0.68rem; color: #d4a0b5;
+      text-align: right; margin-top: 4px;
+    }
+
+    button {
+      width: 100%; background: #ffb6c1; color: #6b1f3c;
+      border: none; border-radius: 14px; padding: 13px;
+      font-family: 'Nunito', sans-serif; font-weight: 800;
+      font-size: 1rem; cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      margin-top: 0.4rem;
+    }
+    button:hover { background: #f79ab5; }
+    button:active { transform: scale(0.97); }
+    button:disabled { opacity: 0.7; cursor: not-allowed; }
+
+    .notice {
+      font-size: 0.72rem; color: #d4a0b5;
+      text-align: center; margin-top: 1rem; line-height: 1.5;
+    }
+
+    /* success state */
+    .success {
+      display: none; flex-direction: column;
+      align-items: center; padding: 1rem 0;
+      gap: 10px; text-align: center;
+    }
+    .success-icon { font-size: 3rem; }
+    .success-text {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem; color: #c45a8a;
+    }
+    .success-sub { font-size: 0.85rem; color: #d4a0b5; }
+    .send-again {
+      background: none; border: 1.5px solid #f0b8ce;
+      color: #c45a8a; border-radius: 12px;
+      padding: 8px 20px; font-size: 0.82rem;
+      font-family: 'Nunito', sans-serif; font-weight: 800;
+      cursor: pointer; margin-top: 4px;
+      transition: all 0.2s; width: auto;
+    }
+    .send-again:hover { background: #fff0f5; }
+
+    /* hearts */
+    .hearts-container { position: fixed; inset: 0; pointer-events: none; overflow: hidden; display: none; z-index: 99; }
+    .heart { position: absolute; bottom: -30px; animation: floatUp 2.2s ease-out forwards; }
+    @keyframes floatUp { to { transform: translateY(-110vh) rotate(20deg); opacity: 0; } }
+  </style>
+</head>
+<body>
+
+<div class="deco-circle deco-1"></div>
+<div class="deco-circle deco-2"></div>
+<div class="hearts-container" id="hearts"></div>
+
+<div class="card">
+  <div class="logo-wrap">
+    <div class="logo-img">
+      <img src="logo.gif" alt="uryaesque" onerror="this.style.display='none';this.parentNode.innerHTML='🌸'">
+    </div>
+    <div class="logo-name">uryaesque</div>
+    <div class="logo-sub">kirim pesan anonim ke aku~ 🌸</div>
+  </div>
+
+  <div id="form-area">
+    <div class="field">
+      <label for="pesan">Pesanmu</label>
+      <textarea id="pesan" placeholder="Tulis apa aja... aku baca semua kok~" maxlength="500" oninput="updateCount()"></textarea>
+      <div class="char-count"><span id="count">0</span>/500</div>
+    </div>
+    <button id="submit-btn" onclick="kirimPesan()">Kirim Pesan 🩷</button>
+    <p class="notice">pesanmu anonim ~ aku ga tau siapa kamu 👀<br>tapi tolong jaga sopan santun ya! </p>
+  </div>
+
+  <div class="success" id="success-area">
+    <div class="success-icon">💌</div>
+    <div class="success-text">Pesan terkirim!</div>
+    <div class="success-sub">makasih udah nulis~ aku bakal baca kok 🌸</div>
+    <button class="send-again" onclick="resetForm()">Kirim lagi?</button>
+  </div>
+</div>
+
+<!-- Firebase -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyD-Ji6LU3l7al2WsNSNUePBZwOJCByFMvk",
+    authDomain: "xxcuties-anonmessages.firebaseapp.com",
+    databaseURL: "https://xxcuties-anonmessages-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "xxcuties-anonmessages",
+    storageBucket: "xxcuties-anonmessages.firebasestorage.app",
+    messagingSenderId: "629397379046",
+    appId: "1:629397379046:web:8c7a5a50221edcb3542827"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+
+  window.kirimPesan = async function() {
+    const pesan = document.getElementById('pesan').value.trim();
+    const btn = document.getElementById('submit-btn');
+
+    if (!pesan) {
+      btn.textContent = 'Isi pesannya dulu ya! 🙈';
+      btn.style.background = '#f0b8ce';
+      setTimeout(() => { btn.textContent = 'Kirim Pesan 🩷'; btn.style.background = ''; }, 2000);
+      return;
+    }
+
+    btn.textContent = 'Mengirim...';
+    btn.disabled = true;
+
+    try {
+      await push(ref(db, 'messages'), {
+        pesan: pesan,
+        waktu: new Date().toISOString(),
+        timestamp: Date.now()
+      });
+      document.getElementById('form-area').style.display = 'none';
+      document.getElementById('success-area').style.display = 'flex';
+      spawnHearts();
+    } catch (err) {
+      btn.textContent = 'Gagal kirim, coba lagi 😢';
+      btn.style.background = '#f0b8ce';
+      btn.disabled = false;
+      setTimeout(() => { btn.textContent = 'Kirim Pesan 🩷'; btn.style.background = ''; }, 3000);
+    }
+  }
+
+  window.resetForm = function() {
+    document.getElementById('pesan').value = '';
+    document.getElementById('count').textContent = '0';
+    document.getElementById('form-area').style.display = 'block';
+    document.getElementById('success-area').style.display = 'none';
+    document.getElementById('submit-btn').disabled = false;
+    document.getElementById('submit-btn').textContent = 'Kirim Pesan 🩷';
+  }
+</script>
+
+<script>
+  function updateCount() {
+    document.getElementById('count').textContent = document.getElementById('pesan').value.length;
+  }
+
+  function spawnHearts() {
+    const container = document.getElementById('hearts');
+    container.style.display = 'block';
+    const emojis = ['🩷','💕','✨','🌸','💖','💌'];
+    for (let i = 0; i < 20; i++) {
+      const h = document.createElement('div');
+      h.className = 'heart';
+      h.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+      h.style.left = Math.random() * 100 + 'vw';
+      h.style.animationDelay = (Math.random() * 1.2) + 's';
+      h.style.fontSize = (0.9 + Math.random() * 0.9) + 'rem';
+      container.appendChild(h);
+    }
+    setTimeout(() => { container.style.display = 'none'; container.innerHTML = ''; }, 3000);
+  }
+</script>
+</body>
+</html>
